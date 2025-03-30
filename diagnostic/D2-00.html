@@ -11,20 +11,26 @@
 
 <script type="text/javascript">
 
+let options = {
    
-    const movementControls = new Map([
-        ["Move Forward", "w"],
-        ["Move Back", "s"],
-        ["Move Left (strafe)", "a"],
-        ["Move Right (strafe)", "d"],
-        ["Sprint (Move Quickly)", "SHIFT"],
-        ["Jump", "SPACE"],
-        ["Duck", "CTRL"]
-    ]);
-    
+    gameplay: [],
 
-    const combatControls = new Map([
-        ["Primary Attack", "MOUSE1"],
-        ["Secondary Attack", "MOUSE2"],
-        ["Reload Weapon", "r"]
-    ]);
+    keyboard:[
+        {movement: "move foward", button: "w"},
+        {movement: "move back", button: "s"},
+        {movement: "move left (strafe)", button: "a"},
+        {movement: "move right (strafe)", button: "d"},
+        {movement: "sprint (move quickly)", button: "SHIFT"},
+        {movement: "jump", button: "SPACE"},
+        {movement: "duck", button: "CTRL"},
+
+        {combat: "Primary attack", button: "MOUSE1"},
+        {combat: "Secondary attack", button: "MOUSE2"},
+   
+    ],
+   
+    Mouse: [],
+    Gamepad: [],
+    Audio: [],
+    Video: [],
+}

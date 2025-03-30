@@ -12,18 +12,33 @@
 
 <script type="text/javascript">
 
-const circuito = {
-    entradas: ["A", "B", "C"],
-    compuertas: [
-        { tipo: "AND", entradas: ["A", "B", "C"], salida: "salidaAND1" },
-        { tipo: "NOT", entrada: "A", salida: "salidaNOT1" },
-        { tipo: "NOT", entrada: "B", salida: "salidaNOT2" },
-        { tipo: "XOR", entradas: ["salidaNOT1", "salidaNOT2"], salida: "salidaXOR1" },
-        { tipo: "AND", entradas: ["salidaXOR1", "C"], salida: "salidaAND2" },
-        { tipo: "OR", entradas: ["salidaAND1", "salidaAND2"], salida: "Y" }
-    ],
-    salida: "Y"
-};
-console.log(circuito);
-
+    const elementos = {
+        A: { id: "A", tipo: "entrada" },
+        B: { id: "B", tipo: "entrada" },
+        C: { id: "C", tipo: "entrada" },
+        salidaAND1: { id: "salidaAND1", tipo: "conexion" },
+        salidaNOT1: { id: "salidaNOT1", tipo: "conexion" },
+        salidaNOT2: { id: "salidaNOT2", tipo: "conexion" },
+        salidaXOR1: { id: "salidaXOR1", tipo: "conexion" },
+        salidaAND2: { id: "salidaAND2", tipo: "conexion" },
+        salidaFinal: { id: "salidaFinal", tipo: "salida" } // Renombrado de "Y" a "salidaFinal"
+    };
+  
+    const compuertas = [
+        { id: "g1", tipo: "AND", entradas: ["A", "B", "C"], salida: "salidaAND1" },
+        { id: "g2", tipo: "NOT", entrada: "A", salida: "salidaNOT1" },
+        { id: "g3", tipo: "NOT", entrada: "B", salida: "salidaNOT2" },
+        { id: "g4", tipo: "XOR", entradas: ["salidaNOT1", "salidaNOT2"], salida: "salidaXOR1" },
+        { id: "g5", tipo: "AND", entradas: ["salidaXOR1", "C"], salida: "salidaAND2" },
+        { id: "g6", tipo: "OR", entradas: ["salidaAND1", "salidaAND2"], salida: "salidaFinal" } // Usando el nuevo nombre
+    ];
+  
+    const circuito = {
+        elementos: elementos,
+        compuertas: compuertas,
+        salida: "salidaFinal"
+    };
 </script>
+
+</body>
+</html>
