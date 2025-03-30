@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+</head>
+
+</html>
+
+<body>
+
+</body>
+
+<script type="text/javascript">
+
+const circuito = {
+    entradas: ["A", "B", "C"],
+    compuertas: [
+        { tipo: "AND", entradas: ["A", "B", "C"], salida: "salidaAND1" },
+        { tipo: "NOT", entrada: "A", salida: "salidaNOT1" },
+        { tipo: "NOT", entrada: "B", salida: "salidaNOT2" },
+        { tipo: "XOR", entradas: ["salidaNOT1", "salidaNOT2"], salida: "salidaXOR1" },
+        { tipo: "AND", entradas: ["salidaXOR1", "C"], salida: "salidaAND2" },
+        { tipo: "OR", entradas: ["salidaAND1", "salidaAND2"], salida: "Y" }
+    ],
+    salida: "Y"
+};
+console.log(circuito);
+
+</script>
