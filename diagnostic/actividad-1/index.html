@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Calculadora Diagnostico</title>
+</head>
+
+<style>
+
+table {
+  width: 100%;
+  max-width: 300px;
+  margin: auto; 
+  border-collapse: separate;
+  border-spacing: 5px; 
+}
+
+input {
+  width: 100%;
+  max-width: 300px;
+  height: 45px;
+  font-size: 1.5rem;
+  text-align: right;
+  display: block;
+  margin: auto;
+  margin-bottom: 10px; 
+} 
+
+.boton-7
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-8
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-9
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-4
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-5
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-6
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+.boton-3
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+.boton-2
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+.boton-1
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-0
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+.boton-punto {
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-mas{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: green;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:green 
+}
+
+.boton-menos{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: green;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:green 
+}
+
+.boton-por{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: green;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:green 
+}
+
+.boton-igual{  
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: rgb(243, 214, 29);
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:rgb(243, 214, 29) ;
+}
+
+.boton-division{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: green;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:green 
+}
+
+
+.boton-borrar-todo{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: red;
+  width: 280px;
+  height: 70px;
+  border-radius: 6px;
+  border-color:red 
+}
+
+</style>
+
+<body>
+ <input> 
+  <table>
+
+    <tr>
+      <td><button class="boton-7">7</button></td>
+      <td><button class="boton-8">8</button></td>
+      <td><button class="boton-9">9</button></td>
+      <td><button class="boton-mas">+</button></td>
+    </tr>
+    <tr>
+      <td><button class="boton-4">4</button></td>
+      <td><button class="boton-5">5</button></td>
+      <td><button class="boton-6">6</button></td>
+      <td><button class="boton-menos">-</button></td>
+    </tr>
+    <tr>
+      <td><button class="boton-3">3</button></td>
+      <td><button class="boton-2">2</button></td>
+      <td><button class="boton-1">1</button></td>
+      <td><button class="boton-por">*</button></td>
+    </tr>
+    <tr>
+      <td><button class="boton-0">0</button></td>
+      <td><button class="boton-punto">.</button></td>
+      <td><button class="boton-igual">=</button></td>
+      <td><button class="boton-division">/</button></td>
+    </tr>
+
+    <tr>
+      <td colspan="4"><button class="boton-borrar-todo">Borrar</button></td>
+    </tr>
+   
+
+  </table>
+  
+
+
+</body>
+
+<script>
+  // Esperamos a que el html cargue completamente
+  document.addEventListener('DOMContentLoaded', function() {
+    // Seleccionamos el campo de entrada (input)
+    const display = document.querySelector('input');
+    
+    // Seleccionamos todos los botones
+    const botones = document.querySelectorAll('button');
+    
+    // Recorremos cada botón y asignamos una función al hacer click
+    botones.forEach(function(boton) {
+      boton.addEventListener('click', function() {
+
+        if (boton.classList.contains('boton-borrar-todo')) {
+          display.value = ""; 
+        }
+
+        else if (boton.classList.contains('boton-igual')) {
+          try {
+            // se calcula el resultado
+            // La función eval() interpreta el string como código JS
+            display.value = eval(display.value);
+          } catch (error) {
+            display.value = "Error";
+          }
+        }
+        // Para los demás números y operadores:
+        else {
+          // Agregamos el texto del botón al final del valor del display
+          display.value += boton.innerText;
+        }
+      });
+    });
+  });
+</script>
+
+</html>

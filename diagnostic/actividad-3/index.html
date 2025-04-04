@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Calculadora Diagnostico</title>
+</head>
+
+<style>
+
+table {
+  width: 100%;
+  max-width: 300px;
+  margin: auto; 
+  border-collapse: separate;
+  border-spacing: 5px; 
+}
+
+input {
+  width: 100%;
+  max-width: 300px;
+  height: 45px;
+  font-size: 1.5rem;
+  text-align: right;
+  display: block;
+  margin: auto;
+  margin-bottom: 10px; 
+} 
+
+.boton-7
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-8
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-9
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-4
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-5
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-6
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+.boton-3
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+.boton-2
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+.boton-1
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-0
+{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+.boton-punto {
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: blue;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:blue
+}
+
+.boton-mas{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: green;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:green 
+}
+
+.boton-menos{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: green;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:green 
+}
+
+.boton-por{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: green;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:green 
+}
+
+.boton-igual{  
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: rgb(243, 214, 29);
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:rgb(243, 214, 29) ;
+}
+
+.boton-division{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: green;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 6px;
+  border-color:green 
+}
+
+
+.boton-borrar-todo{
+  color:white;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 70%;
+
+  background-color: red;
+  width: 280px;
+  height: 70px;
+  border-radius: 6px;
+  border-color:red 
+}
+
+</style>
+
+<body>
+ <input id = "display" type="text">
+  <table>
+
+    <tr>
+      <td><button id="button7" class="boton-7">7</button></td>
+      <td><button id="button8" class="boton-8">8</button></td>
+      <td><button id="button9" class="boton-9">9</button></td>
+      <td><button id="buttonAdd" class="boton-mas">+</button></td>
+    </tr>
+    <tr>
+      <td><button id="button4" class="boton-4">4</button></td>
+      <td><button id="button5" class="boton-5">5</button></td>
+      <td><button id="button6" class="boton-6">6</button></td>
+      <td><button id="buttonSubstract" class= "boton-menos">-</button></td>
+    </tr>
+    <tr>
+      <td><button id="button3" class="boton-3">3</button></td>
+      <td><button id="button2" class="boton-2">2</button></td>
+      <td><button id="button1" class="boton-1">1</button></td>
+      <td><button id="buttonMultiply" class="boton-por">*</button></td>
+    </tr>
+    <tr>
+      <td><button id="button0" class="boton-0">0</button></td>
+      <td><button id="buttonDot" class="boton-punto">.</button></td>
+      <td><button id="buttonEqual" class="boton-igual">=</button></td>
+      <td><button id="buttonDivide" class="boton-division">/</button></td>
+    </tr>
+
+    <tr>
+      <td colspan="4"><button id="buttonClear" class="boton-borrar-todo">Borrar</button></td>
+    </tr>
+   
+
+  </table>
+  
+
+
+</body>
+
+<script>
+  function onButton7Click() {
+      let display = document.getElementById('display');
+      display.value += '7';
+  }
+  let button7 = document.getElementById('button7');
+  button7.onclick = onButton7Click;
+
+  function onButton8Click() {
+      let display = document.getElementById('display');
+      display.value += '8';
+  }
+  let button8 = document.getElementById('button8');
+  button8.onclick = onButton8Click;
+
+  function onButton9Click() {
+      let display = document.getElementById('display');
+      display.value += '9';
+  }
+  let button9 = document.getElementById('button9');
+  button9.onclick = onButton9Click;
+
+  function onButtonAddClick() {
+      let display = document.getElementById('display');
+      display.value += '+';
+  }
+  let buttonAdd = document.getElementById('buttonAdd');
+  buttonAdd.onclick = onButtonAddClick;
+
+  function onButton4Click() {
+      let display = document.getElementById('display');
+      display.value += '4';
+  }
+  let button4 = document.getElementById('button4');
+  button4.onclick = onButton4Click;
+
+  function onButton5Click() {
+      let display = document.getElementById('display');
+      display.value += '5';
+  }
+  let button5 = document.getElementById('button5');
+  button5.onclick = onButton5Click;
+
+  function onButton6Click() {
+      let display = document.getElementById('display');
+      display.value += '6';
+  }
+  let button6 = document.getElementById('button6');
+  button6.onclick = onButton6Click;
+
+  function onButtonSubstractClick() {
+      let display = document.getElementById('display');
+      display.value += '-';
+  }
+  let buttonSubstract = document.getElementById('buttonSubstract');
+  buttonSubstract.onclick = onButtonSubstractClick;
+
+  function onButton3Click() {
+      let display = document.getElementById('display');
+      display.value += '3';
+  }
+  let button3 = document.getElementById('button3');
+  button3.onclick = onButton3Click;
+
+  function onButton2Click() {
+      let display = document.getElementById('display');
+      display.value += '2';
+  }
+  let button2 = document.getElementById('button2');
+  button2.onclick = onButton2Click;
+
+  function onButton1Click() {
+      let display = document.getElementById('display');
+      display.value += '1';
+  }
+  let button1 = document.getElementById('button1');
+  button1.onclick = onButton1Click;
+
+  function onButtonMultiplyClick() {
+      let display = document.getElementById('display');
+      display.value += '*';
+  }
+  let buttonMultiply = document.getElementById('buttonMultiply');
+  buttonMultiply.onclick = onButtonMultiplyClick;
+
+  function onButton0Click() {
+      let display = document.getElementById('display');
+      display.value += '0';
+  }
+  let button0 = document.getElementById('button0');
+  button0.onclick = onButton0Click;
+
+  function onButtonDotClick() {
+      let display = document.getElementById('display');
+      display.value += '.';
+  }
+  let buttonDot = document.getElementById('buttonDot');
+  buttonDot.onclick = onButtonDotClick;
+
+  function onButtonEqualClick() {
+      let display = document.getElementById('display');
+      try {
+          display.value = eval(display.value);
+      } catch (e) {
+          display.value = 'Error';
+      }
+  }
+  let buttonEqual = document.getElementById('buttonEqual');
+  buttonEqual.onclick = onButtonEqualClick;
+
+  function onButtonDivideClick() {
+      let display = document.getElementById('display');
+      display.value += '/';
+  }
+  let buttonDivide = document.getElementById('buttonDivide');
+  buttonDivide.onclick = onButtonDivideClick;
+
+  function onButtonClearClick() {
+      let display = document.getElementById('display');
+      display.value = '';
+  }
+  let buttonClear = document.getElementById('buttonClear');
+  buttonClear.onclick = onButtonClearClick;
+</script>
+
+
+</html>
