@@ -1,0 +1,18 @@
+Proceso de abstracción: Reconocer lo indispensable de lo prescindible
+
+Objeto: Impresora laser
+
+Propiedades/Atributos:
+
+Nombre			| Tipo de dato 	| Cte/Variable | Rango de valores posibles  | f(c)
+-Hojas                int			 variable		 0 .. 40					 --
+-Polvo_Toner(grs)	  double		 variable		 0 .. 1000				 
+
+
+Comportamiento:
+Nombre			| Parámetros/Tipo		            | Retorno/Tipo
+Imprimir 		 (Hojas:int, Polvo_Toner:double)        --
+Cambiar_toner	      --			                    --
+Encender		      --                                --
+Apagar                --                                --
+

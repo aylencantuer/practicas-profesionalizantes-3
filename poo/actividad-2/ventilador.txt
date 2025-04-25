@@ -1,0 +1,15 @@
+Proceso de abstracción: Reconocer lo indispensable de lo prescindible
+
+Objeto: Ventilador
+
+Propiedades/Atributos:
+
+Nombre			| Tipo de dato 	| Cte/Variable | Rango de valores posibles  | f(c)
+-velocidades          array 		variable		 1,2,3  				| --
+
+
+Comportamiento:
+Nombre			|      Parámetros/Tipo		      | Retorno/Tipo
+
+girar_helice        (valocidades[array])
+cambiar_velocidad    (valocidades[array])

@@ -1,0 +1,23 @@
+Proceso de abstracción: Reconocer lo indispensable de lo prescindible
+
+Objeto: Rociador
+
+Propiedades/Atributos:
+
+Nombre			| Tipo de dato 	| Cte/Variable | Rango de valores posibles  | f(c)
+
+-Encendido          boolean             1/0
+-Velocidad          int             variable             0 ... 200
+-Direccion          int             variable             0 ... 180
+-Frenos                                 
+-Acelerador            
+-Apagado            boolean             1/0
+
+Comportamiento:
+Nombre			| Parámetros/Tipo		      | Retorno/Tipo
+arrancar 			  --                            --
+acelerar              --                            --    
+girar			      --			                --
+frenar		          --                            --
+reversa               --                            --
+
