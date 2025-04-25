@@ -1,0 +1,4 @@
+Suponga que el objeto "rociador" adjuntado en la actividad es un elemento realista e interactivo de un juego educativo para niños. 
+Teniendo en cuenta este contexto, efectúe un análisis orientado a objetos y construya la abstracción correspondiente en el POO
+ utilizando el lenguaje JavaScript.
+Construya una interfaz gráfica utilizando HTML/CSS para la abstracción realizada.
