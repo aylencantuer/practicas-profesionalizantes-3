@@ -1,0 +1,16 @@
+Impresora láser monocromática
+Modele el objeto para los siguientes contextos únicamente
+Contexto A : Objeto conceptual realista simplificado
+Contexto B : Artículo en venta de una casa de electrodomésticos
+
+Semáforo (prioridad)
+Desarrolle el modelo del objeto conceptual y su representación gráfica correspondiente (HTML/CSS/JS)
+
+Ventilador
+Desarrolle el modelo conceptual del objeto
+
+Auto
+Desarrolle el modelo conceptual del objeto
+
+Helicóptero
+Modele el objeto conceptual en el contexto del juego: Desert Strike
