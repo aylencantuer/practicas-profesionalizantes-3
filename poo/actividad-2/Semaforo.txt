@@ -5,15 +5,12 @@ Objeto: Semaforo
 Propiedades/Atributos:
 
 Nombre			        | Tipo de dato 	|   Cte/Variable      | Rango de valores posibles  | f(c)
--Luz_Roja                    boolean			variable		 1/0					 
--Luz_Amarilla                boolean		    variable         1/0
--Luz_Verde		             boolean			variable		 1/0					
+-Estado_Luz	                   enum	            variable	    Rojo / Amarillo / Verde					
 
 
 Comportamiento:
 Nombre			| Parámetros/Tipo		                                              | Retorno/Tipo		
-
-Cambiar_Luz 	 (Luz_Roja:boolean, Luz_Amarilla:boolean, Luz_Verde:boolean)
+Cambiar_Luz         (nuevo_estado: enum)	                                                void
 
 
 

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Traffic Light</title>
+  <style type="text/css">
+    .traffic-light {
+      width: 120px;
+      background-color: #222;
+      padding: 15px;
+      border-radius: 20px;
+      margin: 50px auto;
+    }
+    .light {
+      width: 80px;
+      height: 80px;
+      margin: 10px auto;
+      border-radius: 50%;
+      background-color: grey;
+      transition: background-color 0.3s;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="traffic-light">
+    <div id="red" class="light"></div>
+    <div id="yellow" class="light"></div>
+    <div id="green" class="light"></div>
+  </div>
+</body>
+
+<script type="text/javascript">
+  const Estados = {
+    ROJO: 'ROJO',
+    AMARILLO: 'AMARILLO',
+    VERDE: 'VERDE'
+  };
+
+  let Estado_Luz = Estados.ROJO;
+
+  function Cambiar_Luz(nuevo_estado) {
+    Estado_Luz = nuevo_estado;
+    actualizarSemaforo();
+  }
+
+  function actualizarSemaforo() {
+    document.getElementById('red'   ).style.backgroundColor = (Estado_Luz === Estados.ROJO)    ? 'red'    : 'grey';
+    document.getElementById('yellow').style.backgroundColor = (Estado_Luz === Estados.AMARILLO)? 'yellow' : 'grey';
+    document.getElementById('green' ).style.backgroundColor = (Estado_Luz === Estados.VERDE)   ? 'green'  : 'grey';
+  }
+
+  function cicloSemaforo() {
+    setTimeout(() => {
+      Cambiar_Luz(Estados.AMARILLO);
+      setTimeout(() => {
+        Cambiar_Luz(Estados.VERDE);
+        setTimeout(() => {
+          Cambiar_Luz(Estados.AMARILLO);
+          setTimeout(() => {
+            Cambiar_Luz(Estados.ROJO);
+            cicloSemaforo();
+          }, 2000);
+        }, 4000);
+      }, 2000);
+    }, 4000);
+  }
+
+  window.onload = function() {
+    Cambiar_Luz(Estados.ROJO); //Inicializa en rojo
+    cicloSemaforo();           // Arranca el ciclo automático
+  };
+</script>
+
+</html>

@@ -8,15 +8,12 @@ Nombre			    | Tipo de dato 	| Cte/Variable | Rango de valores posibles  | f(c)
 -id                     int             constante           ?
 -Modelo                 string          constante           
 -Precio                 double          varaible
--Capacidad de hojas     int             constante           
+-Capacidad_de_hojas     int             constante           
 -Conexion_inalambrica   boolean?         constante 
 
 
 Comportamiento:
 
 Nombre			| Parámetros/Tipo		            | Retorno/Tipo
-Imprimir 			  --                                 --
-Encender		      --                                 --
-Apagar                --                                 --
-Conectarse-a-la-red   (Conexion_inalambrica:boolean?)
+
 

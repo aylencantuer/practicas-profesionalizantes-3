@@ -7,17 +7,18 @@ Propiedades/Atributos:
 Nombre			| Tipo de dato 	| Cte/Variable | Rango de valores posibles  | f(c)
 
 -Encendido          boolean             1/0
--Velocidad          int             variable             0 ... 200
--Direccion          int             variable             0 ... 180
--Frenos                                 
--Acelerador            
--Apagado            boolean             1/0
+-Velocidad(km/h)    int             variable             0 ... 200 
+-Direccion          int             variable             0 ... 180 grados
+-Frenos             int             variable             0 ... 100   %
+-Acelerador         int             variable             0 ... 100   %
+-Apagado            boolean         variable               1/0
+
 
 Comportamiento:
 Nombre			| Parámetros/Tipo		      | Retorno/Tipo
-arrancar 			  --                            --
-acelerar              --                            --    
-girar			      --			                --
-frenar		          --                            --
-reversa               --                            --
+arrancar 			  (todos)                      --
+acelerar              (Velocidad:int)              --    
+girar			      (Direccion:int)			   --
+frenar		          (Frenos:int)                 --
+reversa                   ?                        --
 

@@ -4,14 +4,21 @@ Objeto: Rociador
 
 Propiedades/Atributos:
 
-Nombre			| Tipo de dato 	| Cte/Variable | Rango de valores posibles  | f(c)
--CapacidadEnML   double			 constante		 750.0  					| --
--% de carga		 double			 variable		 0 .. 100					| rociar, cargar, vaciar
+Nombre			            | Tipo de dato 	    | Cte/Variable  | Rango de valores posibles  | f(c)
 
+-Cantidad_de_Cumbustible		 	int				variable		0 .. 100
+-Cantidad_de_Armadura		 		int	 		 	variable		0 .. 999		 
+-Cantidad_de_Carga                  int                             0
+-Cantidad_de_Vidas                  int             variable        1 .. 3
+-Cantidad_de_Armas                  int             variable        0 .. 9000
+-Cantidad_de_Misiles                int             variable        0 .. 10
 
 Comportamiento:
 Nombre			| Parámetros/Tipo		      | Retorno/Tipo
-rociar 			  --                            --
-cargar			  sustancia:string, %:double    --			  
-vaciar		      --                            --
 
+Encender 			    (todos los parametros)                            
+Elevar			        --			                  -- 
+Avanzar		            (Cantidad_de_Cumbustible)                         
+Girar                   (?)   
+Descender               --    
+Disparar                (Cantidad_de_Armas, Cantidad_de_Misiles)    
