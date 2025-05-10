@@ -4,239 +4,197 @@
 <head>
 <meta charset="utf-8" />
 <title></title>
-
 </head>
 
 <style type="text/css">
-
-.luzroja
-{
+.light-red {
 	background-color: red;
-	color:white;
+	color: white;
 }
 
-.luzamarilla
-{
+.light-yellow {
 	background-color: yellow;
-	color:black;
+	color: black;
 }
 
-.luzverde
-{
+.light-green {
 	background-color: green;
-	color:white;
+	color: white;
 }
 
-.luzapagada
-{
+.light-off {
 	background-color: white;
-	color:black;
+	color: black;
 }
-
-
 </style>
 
 <body>
 
-<button id="red">LuzRoja</button>
-<button id="yellow">LuzAmarilla</button>
-<button id="green">LuzVerde</button>
+<button id="btnRed">Roja</button>
+<button id="btnYellow">Amarilla</button>
+<button id="btnGreen">Verde</button>
 
-<button id="on">Encender</button>
-<button id="off">Apagar</button>
+<button id="btnStart">Encender</button>
+<button id="btnStop">Apagar</button>
 
 </body>
 
 <script type="text/javascript">
-	
-/*Semáforo (prioridad): Desarrolle el modelo del objeto conceptual y su representación 
-gráfica correspondiente (HTML/CSS/JS)*/
+// Semáforo: Desarrolle el modelo del objeto conceptual y su representación 
+// gráfica correspondiente (HTML/CSS/JS)
 
-class SemaphoreView
-{
-	constructor( model )
-	{
+class SemaphoreView {
+	constructor(model) {
 		this._model = model;
-	
-		this._model.addEventListener( 'changed', ()=> this.updateView() );
-
+		this._model.addEventListener('changed', () => this.updateView());
 		this.updateView();
-		
 	}
 
-	updateView()
-	{
+	updateView() {
 		let state = this._model.getModelState();
 
-		document.getElementById('red').style.backgroundColor = 'white';
-		document.getElementById('yellow').style.backgroundColor = 'white';
-		document.getElementById('green').style.backgroundColor = 'white';
+		document.getElementById('btnRed').style.backgroundColor = 'white';
+		document.getElementById('btnYellow').style.backgroundColor = 'white';
+		document.getElementById('btnGreen').style.backgroundColor = 'white';
 
-		if ( state.red )
-		{
-			document.getElementById('red').style.backgroundColor = 'red';
+		if (state.red) {
+			document.getElementById('btnRed').style.backgroundColor = 'red';
 		}
 
-		if ( state.yellow )
-		{
-			document.getElementById('yellow').style.backgroundColor = 'yellow';
+		if (state.yellow) {
+			document.getElementById('btnYellow').style.backgroundColor = 'yellow';
 		}
 
-		if ( state.green )
-		{
-			document.getElementById('green').style.backgroundColor = 'green';
+		if (state.green) {
+			document.getElementById('btnGreen').style.backgroundColor = 'green';
 		}
-
 	}
 }
 
-class SemaphoreModel extends EventTarget
-{
-	constructor()
-	{
+class SemaphoreModel extends EventTarget {
+	constructor() {
 		super();
 
 		this.timer = 0;
 
-		this.redTime = 4;
-		this.transitionTime = 1;
-		this.greenTime = 4;
+		this.durationRed = 5;
+		this.durationTransition = 2;
+		this.durationGreen = 5;
 
-		this.redLightState = null;
-		this.yellowLightState = null;
-		this.greenLightState = null;
+		this.isRedOn = null;
+		this.isYellowOn = null;
+		this.isGreenOn = null;
 
 		this.isRunning = false;
 
-		this.setShutdownState();
+		this.turnOffAllLights();
 	}
 
-	getModelState()
-	{
-		let state = 
-		{
-			red: this.redLightState,
-			yellow: this.yellowLightState,
-			green: this.greenLightState
+	getModelState() {
+		return {
+			red: this.isRedOn,
+			yellow: this.isYellowOn,
+			green: this.isGreenOn
+		};
+	}
+
+	turnOffAllLights() {
+		this.isRedOn = false;
+		this.isYellowOn = false;
+		this.isGreenOn = false;
+		this.dispatchEvent(new CustomEvent('changed'));
+	}
+
+	turnOnRedYellow() {
+		this.isRedOn = true;
+		this.isYellowOn = true;
+		this.isGreenOn = false;
+		this.dispatchEvent(new CustomEvent('changed'));
+	}
+
+	turnOnGreen() {
+		this.isRedOn = false;
+		this.isYellowOn = false;
+		this.isGreenOn = true;
+		this.dispatchEvent(new CustomEvent('changed'));
+	}
+
+	turnOnRed() {
+		this.isRedOn = true;
+		this.isYellowOn = false;
+		this.isGreenOn = false;
+		this.dispatchEvent(new CustomEvent('changed'));
+	}
+
+	turnOnYellowGreen() {
+		this.isRedOn = false;
+		this.isYellowOn = true;
+		this.isGreenOn = true;
+		this.dispatchEvent(new CustomEvent('changed'));
+	}
+
+	onTickEventHandler(event) {
+		// Esta función se ejecuta cada vez que 
+		// el "timer" (temporizador) envía un mensaje desde un Web Worker (timer.js). 
+		// Es como el "latido" del semáforo. En cada tick, la función decide qué luces deben estar 
+		// encendidas según cuánto tiempo ha pasado.
+		this.timer++; // aumenta contador en cada llamada 
+
+		if (this.timer >= 0 && this.timer < this.durationRed) {
+			this.turnOnRed();
 		}
 
-		return state;
-	}
-
-	setShutdownState()
-	{
-		this.redLightState = false;
-		this.yellowLightState = false;
-		this.greenLightState = false;
-		
-		this.dispatchEvent( new CustomEvent('changed') );
-	}
-
-	setRedToGreenTransitionState()
-	{
-		this.redLightState = true;
-		this.yellowLightState = true;
-		this.greenLightState = false;
-
-		this.dispatchEvent( new CustomEvent('changed') );
-	}
-
-	setGreenLightState()
-	{
-		this.redLightState = false;
-		this.yellowLightState = false;
-		this.greenLightState = true;
-
-		this.dispatchEvent( new CustomEvent('changed') );
-	}
-
-	setRedLightState()
-	{
-		this.redLightState = true;
-		this.yellowLightState = false;
-		this.greenLightState = false;
-
-		this.dispatchEvent( new CustomEvent('changed') );
-	}
-
-	setGreenToRedTransitionState()
-	{
-		this.redLightState = false;
-		this.yellowLightState = true;
-		this.greenLightState = true;
-		this.dispatchEvent( new CustomEvent('changed') );
-	}
-
-	onTickEventHandler(event)
-	{
-		this.timer++;
-
-		if ( this.timer >= 0 && this.timer < this.redTime )
-		{
-			this.setRedLightState();
+		if (this.timer >= this.durationRed && this.timer < (this.durationRed + this.durationTransition)) {
+			this.turnOnRedYellow();
 		}
 
-		if ( this.timer >= this.redTime && this.timer < (this.redTime+this.transitionTime) )
-		{
-			this.setRedToGreenTransitionState();
+		if (this.timer >= (this.durationRed + this.durationTransition) &&
+			this.timer < (this.durationRed + this.durationTransition + this.durationGreen)) {
+			this.turnOnGreen();
 		}
 
-		if ( this.timer >= (this.redTime+this.transitionTime) && this.timer < (this.redTime+this.transitionTime+this.greenTime) )
-		{
-			this.setGreenLightState();
+		if (this.timer >= (this.durationRed + this.durationTransition + this.durationGreen) &&
+			this.timer <= (this.durationRed + 2 * this.durationTransition + this.durationGreen)) {
+			this.turnOnYellowGreen();
 		}
 
-		if ( this.timer >= (this.redTime+this.transitionTime+this.greenTime) && this.timer <= (this.redTime+2*this.transitionTime+this.greenTime) )
-		{
-			this.setGreenToRedTransitionState();
-		}
-
-		if ( this.timer >= (this.redTime+2*this.transitionTime+this.greenTime) )
-		{
-			this.timer = 0;
+		if (this.timer >= (this.durationRed + 2 * this.durationTransition + this.durationGreen)) {
+			this.timer = 0; // reinicia el contador para comenzar de nuevo
 		}
 
 		console.log(this.timer);
 	}
 
-	run()
-	{
-		if ( !this.isRunning )
-		{
+	startCycle() {
+		if (!this.isRunning) {
 			this.worker = new Worker("timer.js");
-			this.worker.addEventListener('message', this.onTickEventHandler.bind(this) );
+			this.worker.addEventListener('message', this.onTickEventHandler.bind(this));
 			this.isRunning = true;
-		}
-		else
-		{
+		} else {
 			console.log('Semaphore is running...');
 		}
-		
+		// Se escucha el evento message: cada vez que timer.js envía un mensaje
 	}
 
-	shutdown()
-	{
-		if( this.isRunning )
-		{
-			this.worker.removeEventListener('message', this.onTickEventHandler );
+	stopCycle() {
+		if (this.isRunning) {
+			this.worker.removeEventListener('message', this.onTickEventHandler);
 			this.worker.terminate();
-			this.setShutdownState();
+			this.turnOffAllLights();
 			this.isRunning = false;
-		}		
+		}
 	}
 }
 
-function main()
-{
+function main() {
 	let semaphore = new SemaphoreModel();
 	let view = new SemaphoreView(semaphore);
 
-	document.getElementById('on').onclick = () => semaphore.run();
-	document.getElementById('off').onclick = () => semaphore.shutdown();
+	document.getElementById('btnStart').onclick = () => semaphore.startCycle();
+	document.getElementById('btnStop').onclick = () => semaphore.stopCycle();
 }
 
 window.onload = main;
-
 </script>
 
 </html>
