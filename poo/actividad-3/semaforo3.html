@@ -7,6 +7,12 @@
 </head>
 
 <style type="text/css">
+
+canvas {
+    border: 1px solid black;
+    margin-top: 10px;
+}
+
 .light-red {
 	background-color: red;
 	color: white;
@@ -26,6 +32,7 @@
 	background-color: white;
 	color: black;
 }
+
 </style>
 
 <body>
@@ -36,6 +43,8 @@
 
 <button id="btnStart">Encender</button>
 <button id="btnStop">Apagar</button>
+
+<canvas id="canvasID" width="200" height="150"></canvas>
 
 </body>
 
@@ -72,7 +81,7 @@ class SemaphoreView {
 }
 
 class SemaphoreModel extends EventTarget {
-	constructor() {
+	constructor(circle) {
 		super();
 
 		this.timer = 0;
@@ -86,7 +95,7 @@ class SemaphoreModel extends EventTarget {
 		this.isGreenOn = null;
 
 		this.isRunning = false;
-
+		this.circle = circle
 		this.turnOffAllLights();
 	}
 
@@ -103,12 +112,14 @@ class SemaphoreModel extends EventTarget {
 		this.isYellowOn = false;
 		this.isGreenOn = false;
 		this.dispatchEvent(new CustomEvent('changed'));
+		this.circle.setSpeed(0);
 	}
 
 	turnOnRedYellow() {
 		this.isRedOn = true;
 		this.isYellowOn = true;
 		this.isGreenOn = false;
+		this.circle.setSpeed(0);
 		this.dispatchEvent(new CustomEvent('changed'));
 	}
 
@@ -116,6 +127,7 @@ class SemaphoreModel extends EventTarget {
 		this.isRedOn = false;
 		this.isYellowOn = false;
 		this.isGreenOn = true;
+		this.circle.setSpeed(2); // velocidad constante
 		this.dispatchEvent(new CustomEvent('changed'));
 	}
 
@@ -123,6 +135,7 @@ class SemaphoreModel extends EventTarget {
 		this.isRedOn = true;
 		this.isYellowOn = false;
 		this.isGreenOn = false;
+		this.circle.setSpeed(0);
 		this.dispatchEvent(new CustomEvent('changed'));
 	}
 
@@ -130,6 +143,7 @@ class SemaphoreModel extends EventTarget {
 		this.isRedOn = false;
 		this.isYellowOn = true;
 		this.isGreenOn = true;
+		this.circle.setSpeed(0);
 		this.dispatchEvent(new CustomEvent('changed'));
 	}
 
@@ -186,13 +200,60 @@ class SemaphoreModel extends EventTarget {
 	}
 }
 
+class Circle {
+	constructor(ctx, canvasWidth) {
+		this.ctx = ctx;
+		this.x = 10;
+		this.y = 120;
+		this.radius = 30;
+		this.speed = 0;
+		this.canvasWidth = canvasWidth;
+	}
+
+	setSpeed(speed) {
+		this.speed = speed;
+	}
+
+	updatePosition() {
+		this.x += this.speed;
+		if (this.x > this.canvasWidth) {
+			this.x = -this.radius * 2; // reinicia desde fuera del canvas
+		}
+	}
+
+	draw() {
+	this.ctx.beginPath();
+	this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+	this.ctx.fillStyle = "transparent"; 
+	this.ctx.fill();
+	this.ctx.stroke();
+}
+
+}
+
+
 function main() {
-	let semaphore = new SemaphoreModel();
+	const canvas = document.getElementById("canvasID");
+	const ctx = canvas.getContext("2d");
+	const canvasWidth = canvas.width;
+
+	let circle = new Circle(ctx, canvasWidth); 
+	let semaphore = new SemaphoreModel(circle);
 	let view = new SemaphoreView(semaphore);
+
+	function animate() {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		circle.updatePosition();
+		circle.draw();
+		requestAnimationFrame(animate);
+	}
+
+	animate();
 
 	document.getElementById('btnStart').onclick = () => semaphore.startCycle();
 	document.getElementById('btnStop').onclick = () => semaphore.stopCycle();
 }
+
 
 window.onload = main;
 </script>
