@@ -1,9 +1,10 @@
 //RectangleController.js
 
 export class RectangleController {
-    constructor(rectangle){
+    constructor(rectangle, renderer, canvas){
     this.rectangle=rectangle;
     this.renderer = renderer;
+    this.canvas=canvas;
 
     window.addEventListener('keydown', (event) => this.KeyHandler(event));
     }
@@ -12,11 +13,12 @@ export class RectangleController {
         switch (event.key) {
 
             case "ArrowUp" :
-                this.rectangle.moveForward();
+                this.rectangle.moveForward(this.canvas.width, this.canvas.height);  // modificado
                 break;
             case "ArrowDown":
-                this.rectangle.moveBackward();
+                this.rectangle.moveBackward(this.canvas.width, this.canvas.height); // modificado
                 break;
+
             case "ArrowLeft":
                 this.rectangle.rotate(-0.1); // rotación antihoraria
                 break;

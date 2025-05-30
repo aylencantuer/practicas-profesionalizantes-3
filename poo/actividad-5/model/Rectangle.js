@@ -1,4 +1,4 @@
-//rectangle.js
+//Rectangle.js
 
 export class Rectangle {
     constructor(x,y,w,h) {
@@ -10,30 +10,50 @@ export class Rectangle {
         this.speed = 6; 
     }
 
-    rotate(value){
-        this.angle=value
-    }
 
-    draw(ctx) {
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle);
-        ctx.fillStyle = 'blue';
-        ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
-        ctx.restore();
+    draw(context) {
+        context.save();
+        context.translate(this.x, this.y);
+        context.rotate(this.angle);
+        context.fillStyle = 'blue';
+        context.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
+        context.restore();
     }
 
     rotate(radians) {
         this.angle += radians;
     }
 
-    moveForward() {
-        this.x += this.speed * Math.cos(this.angle);
-        this.y += this.speed * Math.sin(this.angle);
+    moveForward(canvasWidth, canvasHeight) {
+        const nextX = this.x + this.speed * Math.cos(this.angle);
+        const nextY = this.y + this.speed * Math.sin(this.angle);
+
+         if (this.isInsideBounds(nextX, nextY, canvasWidth, canvasHeight)) {
+            this.x = nextX;
+            this.y = nextY;
     }
 
-    moveBackward() {
-        this.x -= this.speed * Math.cos(this.angle);
-        this.y -= this.speed * Math.sin(this.angle);
+    }
+
+    moveBackward(canvasWidth, canvasHeight) {
+        const nextX = this.x - this.speed * Math.cos(this.angle);
+        const nextY = this.y - this.speed * Math.sin(this.angle);
+
+        if (this.isInsideBounds(nextX, nextY, canvasWidth, canvasHeight)) {
+            this.x = nextX;
+            this.y = nextY;
+    }
+    }
+
+    isInsideBounds(x, y, canvasWidth, canvasHeight) {
+        const halfWidth = this.width / 2;
+        const halfHeight = this.height / 2;
+
+        return (
+            x - halfWidth >= 0 &&
+            x + halfWidth <= canvasWidth &&
+            y - halfHeight >= 0 &&
+            y + halfHeight <= canvasHeight
+        );
     }
 }

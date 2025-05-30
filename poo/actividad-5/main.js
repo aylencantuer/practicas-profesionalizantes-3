@@ -8,7 +8,7 @@ import { RectangleController } from './controller/RectangleController.js';
 function main()
 {
     let canvas = document.createElement('canvas');
-    canvas.width = 400;
+    canvas.width = 645;
     canvas.height = 400;
     document.body.appendChild(canvas);
 
@@ -18,7 +18,7 @@ function main()
     renderer.addObject('Rectangle1', rectangle);
 
     // Conectar el controlador al mismo rectángulo
-    let controller = new RectangleController(rectangle,renderer);
+    let controller = new RectangleController(rectangle, renderer, canvas);
 
         /*Por si desp quiero agregar otro 
         //  renderer.addObject('rectangulo 2', new Rectangle(200,200,180,80));

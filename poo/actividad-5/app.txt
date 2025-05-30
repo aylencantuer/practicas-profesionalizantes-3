@@ -20,9 +20,11 @@ organización de directorios(estructura):
 ---------------------------------------------------------------------------
 //RectangleController.js
 
-class RectangleController {
-    constructor(rectangle){
+export class RectangleController {
+    constructor(rectangle, renderer, canvas){
     this.rectangle=rectangle;
+    this.renderer = renderer;
+    this.canvas=canvas;
 
     window.addEventListener('keydown', (event) => this.KeyHandler(event));
     }
@@ -31,10 +33,10 @@ class RectangleController {
         switch (event.key) {
 
             case "ArrowUp" :
-                this.rectangle.moveForward();
+                this.rectangle.moveForward(canvas.canvas.width, this.canvas.height);
                 break;
             case "ArrowDown":
-                this.rectangle.moveBackward();
+                this.rectangle.moveBackward(canvas.canvas.width, this.canvas.height);
                 break;
             case "ArrowLeft":
                 this.rectangle.rotate(-0.1); // rotación antihoraria
@@ -44,7 +46,7 @@ class RectangleController {
                 break;
         } 
 
-        draw(); // Actualiza canvas cvez que se presiona
+        this.renderer.render(); // Actualiza canvas cvez que se presiona
    
         }
 
@@ -52,10 +54,10 @@ class RectangleController {
 ---------------------------------------------------------------------------
 //GameEngineRenderer.js
 
-class GameEngineRenderer{
+export class GameEngineRenderer{
     constructor(canvasInstance){
         this.canvas = canvasInstance;
-        this.ctx=this.canvas.getContext('2d');
+        this.context=this.canvas.getContext('2d');
         this.objects = new Map();
     }
 
@@ -69,24 +71,24 @@ class GameEngineRenderer{
 
     render(){
         //Limpieza
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         //Dibujado
         for (const item of this.objects.values() )
         {
-            item.draw(this.ctx);
+            item.draw(this.context);
         }
     }
 }
 
 function clearCanvas()
 {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 }
 ---------------------------------------------------------------------------
-//rectangle.js
+//Rectangle.js
 
-class Rectangle {
+export class Rectangle {
     constructor(x,y,w,h) {
         this.x=x;
         this.y = y;
@@ -96,31 +98,51 @@ class Rectangle {
         this.speed = 6; 
     }
 
-    rotate(value){
-        this.angle=value
-    }
 
-    draw(ctx) {
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle);
-        ctx.fillStyle = 'blue';
-        ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
-        ctx.restore();
+    draw(context) {
+        context.save();
+        context.translate(this.x, this.y);
+        context.rotate(this.angle);
+        context.fillStyle = 'blue';
+        context.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
+        context.restore();
     }
 
     rotate(radians) {
         this.angle += radians;
     }
 
-    moveForward() {
-        this.x += this.speed * Math.cos(this.angle);
-        this.y += this.speed * Math.sin(this.angle);
+    moveForward(canvasWidth, canvasHeight) {
+        const nextX = this.x + this.speed * Math.cos(this.angle);
+        const nextY = this.y + this.speed * Math.sin(this.angle);
+
+         if (this.isInsideBounds(nextX, nextY, canvasWidth, canvasHeight)) {
+            this.x = nextX;
+            this.y = nextY;
     }
 
-    moveBackward() {
-        this.x -= this.speed * Math.cos(this.angle);
-        this.y -= this.speed * Math.sin(this.angle);
+    }
+
+    moveBackward(canvasWidth, canvasHeight) {
+        const nextX = this.x - this.speed * Math.cos(this.angle);
+        const nextY = this.y - this.speed * Math.sin(this.angle);
+
+        if (this.isInsideBounds(nextX, nextY, canvasWidth, canvasHeight)) {
+            this.x = nextX;
+            this.y = nextY;
+    }
+    }
+
+    isInsideBounds(x, y, canvasWidth, canvasHeight) {
+        const halfWidth = this.width / 2;
+        const halfHeight = this.height / 2;
+
+        return (
+            x - halfWidth >= 0 &&
+            x + halfWidth <= canvasWidth &&
+            y - halfHeight >= 0 &&
+            y + halfHeight <= canvasHeight
+        );
     }
 }
 ---------------------------------------------------------------------------
@@ -142,29 +164,32 @@ class Rectangle {
     </style>
 </head>
 <body>
-<script>
-</script>
 </body>
+<script type="module" src="./main.js"></script>
 </html>
 
 ---------------------------------------------------------------------------
 //main.js
 
+import { GameEngineRenderer } from './model/GameEngineRenderer.js';
+import { Rectangle } from './model/Rectangle.js';
+import { RectangleController } from './controller/RectangleController.js';
+
 
 function main()
 {
     let canvas = document.createElement('canvas');
-    canvas.width = 400;
+    canvas.width = 645;
     canvas.height = 400;
     document.body.appendChild(canvas);
 
     let renderer = new GameEngineRenderer(canvas);
 
-    rectangle = new Rectangle(200, 200, 100, 50);
+    let rectangle = new Rectangle(200, 200, 100, 50);
     renderer.addObject('Rectangle1', rectangle);
 
     // Conectar el controlador al mismo rectángulo
-    let controller = new RectangleController(rectangle);
+    let controller = new RectangleController(rectangle, renderer, canvas);
 
         /*Por si desp quiero agregar otro 
         //  renderer.addObject('rectangulo 2', new Rectangle(200,200,180,80));
@@ -174,6 +199,7 @@ function main()
     setInterval( renderer.render.bind(renderer), 16 );
 }
 window.onload = main;
-
 ---------------------------------------------------------------------------
+
+
 
