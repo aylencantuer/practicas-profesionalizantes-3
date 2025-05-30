@@ -1,0 +1,179 @@
+organización de directorios(estructura):
+
+
+/actividad-5
+│
+├── index.html              ← Punto de entrada
+└── main.js             
+│
+├── /model                  ← Clases que representan figuras y lógica del juego
+│   ├── Rectangle.js
+│   ├── Circle.js           ← (en el futuro)
+│   ├── Triangle.js         ← (en el futuro)
+│   └── GameEngineRenderer.js
+│
+├── /controller             ← Controladores de entrada del usuario
+│   └── RectangleController.js
+
+
+
+---------------------------------------------------------------------------
+//RectangleController.js
+
+class RectangleController {
+    constructor(rectangle){
+    this.rectangle=rectangle;
+
+    window.addEventListener('keydown', (event) => this.KeyHandler(event));
+    }
+
+    KeyHandler(event) {
+        switch (event.key) {
+
+            case "ArrowUp" :
+                this.rectangle.moveForward();
+                break;
+            case "ArrowDown":
+                this.rectangle.moveBackward();
+                break;
+            case "ArrowLeft":
+                this.rectangle.rotate(-0.1); // rotación antihoraria
+                break;
+            case "ArrowRight":
+                this.rectangle.rotate(0.1);  // rotación horaria
+                break;
+        } 
+
+        draw(); // Actualiza canvas cvez que se presiona
+   
+        }
+
+}
+---------------------------------------------------------------------------
+//GameEngineRenderer.js
+
+class GameEngineRenderer{
+    constructor(canvasInstance){
+        this.canvas = canvasInstance;
+        this.ctx=this.canvas.getContext('2d');
+        this.objects = new Map();
+    }
+
+    addObject (id,object){
+        this.objects.set(id,object);
+    }
+
+    getObject(id){
+        return this.objects.get(id);
+    }
+
+    render(){
+        //Limpieza
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        //Dibujado
+        for (const item of this.objects.values() )
+        {
+            item.draw(this.ctx);
+        }
+    }
+}
+
+function clearCanvas()
+{
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+---------------------------------------------------------------------------
+//rectangle.js
+
+class Rectangle {
+    constructor(x,y,w,h) {
+        this.x=x;
+        this.y = y;
+        this.width = w;
+        this.height = h;
+        this.angle = 0;
+        this.speed = 6; 
+    }
+
+    rotate(value){
+        this.angle=value
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
+        ctx.restore();
+    }
+
+    rotate(radians) {
+        this.angle += radians;
+    }
+
+    moveForward() {
+        this.x += this.speed * Math.cos(this.angle);
+        this.y += this.speed * Math.sin(this.angle);
+    }
+
+    moveBackward() {
+        this.x -= this.speed * Math.cos(this.angle);
+        this.y -= this.speed * Math.sin(this.angle);
+    }
+}
+---------------------------------------------------------------------------
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Canvas figuras en movimiento</title>
+    <style>
+        body 
+        {
+            width: 50%;
+            height: 50%;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+<script>
+</script>
+</body>
+</html>
+
+---------------------------------------------------------------------------
+//main.js
+
+
+function main()
+{
+    let canvas = document.createElement('canvas');
+    canvas.width = 400;
+    canvas.height = 400;
+    document.body.appendChild(canvas);
+
+    let renderer = new GameEngineRenderer(canvas);
+
+    rectangle = new Rectangle(200, 200, 100, 50);
+    renderer.addObject('Rectangle1', rectangle);
+
+    // Conectar el controlador al mismo rectángulo
+    let controller = new RectangleController(rectangle);
+
+        /*Por si desp quiero agregar otro 
+        //  renderer.addObject('rectangulo 2', new Rectangle(200,200,180,80));
+        // renderer.getObject('rectangulo 2').rotate( Math.PI / 4 );
+        */
+
+    setInterval( renderer.render.bind(renderer), 16 );
+}
+window.onload = main;
+
+---------------------------------------------------------------------------
+
