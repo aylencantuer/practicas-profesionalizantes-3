@@ -1,0 +1,14 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f4f4f9;
+}
+
+/* El elemento application-ui ocupará todo el espacio disponible */
+application-ui {
+    display: flex;
+    flex-grow: 1;
+}

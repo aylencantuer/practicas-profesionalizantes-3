@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas figuras en movimiento</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f4f4f9;
+        }
+        main-layout {
+            display: flex;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+
+// FIGURAS 
+
+class Figura {
+    constructor(id, x, y, color) {
+        if (this.constructor === Figura) {
+            throw new Error("No se puede instanciar la clase abstracta Figura.");
+        }
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.color = color;
+    }
+
+    move(dx, dy) {
+        this.x += dx;
+        this.y += dy;
+    }
+
+    draw(ctx) {
+        throw new Error("El método 'draw' debe ser implementado por las subclases.");
+    }
+}
+
+class Rectangulo extends Figura {
+    constructor(id, x, y, width, height, color) {
+        super(id, x, y, color);
+        this.width = width;
+        this.height = height;
+        this.type = 'R'; // Tipo para la tabla
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.fillStyle = this.color;
+        // Dibuja el rectángulo desde su centro (x, y)
+        ctx.fillRect(this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
+        ctx.restore();
+    }
+}
+
+class Circulo extends Figura {
+    constructor(id, x, y, radius, color) {
+        super(id, x, y, color);
+        this.radius = radius;
+        this.type = 'C'; // Tipo para la tabla
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+        ctx.restore();
+    }
+}
+
+class TrianguloEquilatero extends Figura {
+    constructor(id, x, y, side, color) {
+        super(id, x, y, color);
+        this.side = side;
+        this.type = 'T'; // Tipo para la tabla
+    }
+
+    draw(ctx) {
+        const height = (Math.sqrt(3) / 2) * this.side;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        
+        // Mueve el origen al punto (x, y) para dibujar el triángulo centrado
+        ctx.translate(this.x, this.y);
+
+        // Vértice superior
+        ctx.moveTo(0, -height * 2 / 3);
+        // Vértice inferior izquierdo
+        ctx.lineTo(-this.side / 2, height * 1 / 3);
+        // Vértice inferior derecho
+        ctx.lineTo(this.side / 2, height * 1 / 3);
+        
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+}
+
+
+
+// VISTA
+
+
+class ApplicationUI extends HTMLElement {
+    constructor() {
+        super();
+        const shadow = this.attachShadow({ mode: 'open' });
+
+        const style = document.createElement('style');
+        style.textContent = `
+          :host {
+            display: flex;
+            flex-direction: column; /* Apila el canvas y el pie de página */
+            flex-grow: 1;
+            height: 100%;
+          }
+          .main-container {
+            display: flex;
+            flex-grow: 1;
+            height: calc(100% - 40px); /* Resta la altura del footer */
+          }
+          .sidebar {
+            width: 200px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-right: 1px solid #ccc;
+          }
+          .sidebar button {
+            padding: 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+            background-color: #e9e9e9;
+          }
+          .sidebar button:hover {
+            background-color: #dcdcdc;
+          }
+          .sidebar input[type="color"] {
+            width: 100%;
+            height: 50px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 0;
+          }
+          .canvas-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+          }
+          canvas {
+            border: 2px solid #333;
+            background-color: #fdfdfd;
+          }
+          .table-panel {
+            width: 250px;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #f0f0f0;
+            border-left: 1px solid #ccc;
+            overflow-y: auto;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+            font-size: 14px;
+          }
+          th {
+            background-color: #ddd;
+          }
+          tbody tr {
+            cursor: pointer;
+          }
+          tbody tr:hover {
+            background-color: #e0e0e0;
+          }
+          tbody tr.selected {
+            background-color: #a8d1ff;
+            font-weight: bold;
+          }
+          .footer {
+            height: 40px;
+            padding: 0 20px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+          }
+        `;
+
+        // ==== Estructura HTML ====
+        const mainContainer = document.createElement('div');
+        mainContainer.className = 'main-container';
+
+        // -- Panel Izquierdo (Botones) --
+        const sidebar = document.createElement('div');
+        sidebar.className = 'sidebar';
+
+        this.btnRect = document.createElement('button');
+        this.btnRect.textContent = 'Crear rectángulo';
+
+        this.btnCircle = document.createElement('button');
+        this.btnCircle.textContent = 'Crear círculo';
+
+        this.btnTriangle = document.createElement('button');
+        this.btnTriangle.textContent = 'Crear triángulo';
+
+        const colorLabel = document.createElement('label');
+        colorLabel.setAttribute('for', 'colorPicker');
+        colorLabel.textContent = 'Color:';
+
+        this.colorInput = document.createElement('input');
+        this.colorInput.type = 'color';
+        this.colorInput.id = 'colorPicker';
+        this.colorInput.value = '#8A2BE2'; // Un color por defecto
+
+        sidebar.appendChild(this.btnRect);
+        sidebar.appendChild(this.btnCircle);
+        sidebar.appendChild(this.btnTriangle);
+        sidebar.appendChild(colorLabel);
+        sidebar.appendChild(this.colorInput);
+
+        // -- Contenedor Central (Canvas) --
+        const canvasContainer = document.createElement('div');
+        canvasContainer.className = 'canvas-container';
+        this.canvas = document.createElement('canvas');
+        this.canvas.width = 600;
+        this.canvas.height = 400;
+        canvasContainer.appendChild(this.canvas);
+
+        // -- Panel Derecho (Tabla) --
+        const tablePanel = document.createElement('div');
+        tablePanel.className = 'table-panel';
+        const tableHeader = document.createElement('h3');
+        tableHeader.textContent = 'Figuras creadas';
+        this.table = document.createElement('table');
+        this.table.innerHTML = `
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>ID/Nombre</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Las filas se añadirán dinámicamente -->
+          </tbody>
+        `;
+        tablePanel.appendChild(tableHeader);
+        tablePanel.appendChild(this.table);
+
+        // -- Pie de página --
+        const footer = document.createElement('div');
+        footer.className = 'footer';
+        this.activeFigureLabel = document.createElement('span');
+        footer.appendChild(this.activeFigureLabel);
+        
+        // -- Ensamblaje --
+        mainContainer.appendChild(sidebar);
+        mainContainer.appendChild(canvasContainer);
+        mainContainer.appendChild(tablePanel);
+
+        shadow.appendChild(style);
+        shadow.appendChild(mainContainer);
+        shadow.appendChild(footer);
+
+        // ==== Manejo de eventos ====
+        this.btnRect.onclick = () => this.dispatchEvent(new CustomEvent('createRequest', { detail: { type: 'rectangle' } }));
+        this.btnCircle.onclick = () => this.dispatchEvent(new CustomEvent('createRequest', { detail: { type: 'circle' } }));
+        this.btnTriangle.onclick = () => this.dispatchEvent(new CustomEvent('createRequest', { detail: { type: 'triangle' } }));
+    }
+
+    getDrawingContext2D() {
+        return this.canvas.getContext("2d");
+    }
+
+    getColor() {
+        return this.colorInput.value;
+    }
+    
+    /**
+     * Actualiza la tabla de figuras y el indicador de figura activa.
+     * @param {Map<string, Figura>} figures - El mapa de figuras del modelo.
+     * @param {string|null} selectedFigureId - El ID de la figura seleccionada.
+     */
+    update(figures, selectedFigureId) {
+        this.updateTable(figures);
+        this.setActiveFigure(selectedFigureId, figures);
+    }
+
+    updateTable(figures) {
+        const tbody = this.shadowRoot.querySelector('tbody');
+        tbody.innerHTML = ''; // Limpiar tabla anterior
+
+        figures.forEach(figure => {
+            const row = tbody.insertRow();
+            row.dataset.figureId = figure.id; // Guardar el ID en el DOM para fácil acceso
+
+            row.insertCell(0).textContent = figure.type;
+            row.insertCell(1).textContent = figure.id;
+
+            // Evento para seleccionar la figura al hacer clic en su fila
+            row.onclick = () => {
+                this.dispatchEvent(new CustomEvent('figureSelected', { detail: { id: figure.id } }));
+            };
+        });
+    }
+
+    setActiveFigure(figureId, figures) {
+        // Actualizar el texto del pie de página
+        this.activeFigureLabel.textContent = `Figura activa seleccionada actual: ${figureId || 'Ninguna'}`;
+
+        // Resaltar la fila en la tabla
+        const allRows = this.shadowRoot.querySelectorAll('tbody tr');
+        allRows.forEach(row => {
+            // Compara el data-attribute de la fila con el ID seleccionado
+            if (row.dataset.figureId === figureId) {
+                row.classList.add('selected');
+            } else {
+                row.classList.remove('selected');
+            }
+        });
+    }
+
+    clearCanvas() {
+        const ctx = this.getDrawingContext2D();
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+customElements.define('application-ui', ApplicationUI);
+
+
+
+// MODELO (Almacena el estado de la aplicación)
+
+
+class ApplicationModel extends EventTarget {
+    constructor() {
+        super();
+        this.figures = new Map();
+        this.selectedFigureId = null;
+    }
+
+    addFigure(figure) {
+        if (this.figures.has(figure.id)) {
+            // Previene IDs duplicados
+            return false; 
+        }
+        this.figures.set(figure.id, figure);
+        this.dispatchEvent(new CustomEvent('modelChanged'));
+        return true;
+    }
+
+    getFigure(id) {
+        return this.figures.get(id);
+    }
+    
+    getSelectedFigure() {
+        return this.getFigure(this.selectedFigureId);
+    }
+
+    setSelectedFigure(id) {
+        if (this.selectedFigureId !== id) {
+            this.selectedFigureId = id;
+            // Notificar que la selección ha cambiado
+            this.dispatchEvent(new CustomEvent('modelChanged'));
+        }
+    }
+
+    moveSelectedFigure(dx, dy) {
+        const selectedFigure = this.getSelectedFigure();
+        if (selectedFigure) {
+            selectedFigure.move(dx, dy);
+            // Notificar que el modelo cambió para que se redibuje
+            this.dispatchEvent(new CustomEvent('modelChanged'));
+        }
+    }
+}
+
+
+
+// CONTROLADOR (Conecta la Vista y el Modelo)
+
+
+class ApplicationController {
+    constructor(view, model) {
+        this.view = view;
+        this.model = model;
+        this.ctx = this.view.getDrawingContext2D();
+    }
+
+    init() {
+        // Escuchar cambios en el modelo para redibujar todo
+        this.model.addEventListener('modelChanged', () => this.onModelChanged());
+
+        // Escuchar peticiones de creación de figuras desde la vista
+        this.view.addEventListener('createRequest', (e) => this.handleCreateRequest(e.detail.type));
+
+        // Escuchar cuando el usuario selecciona una figura desde la tabla
+        this.view.addEventListener('figureSelected', (e) => this.model.setSelectedFigure(e.detail.id));
+
+        // Escuchar las teclas de flecha para mover la figura seleccionada
+        window.addEventListener('keydown', (e) => this.handleKeyDown(e));
+        
+        // Estado inicial
+        this.onModelChanged();
+    }
+
+    onModelChanged() {
+        // 1. Limpiar el canvas
+        this.view.clearCanvas();
+
+        // 2. Dibujar todas las figuras
+        this.model.figures.forEach(figure => figure.draw(this.ctx));
+
+        // 3. Actualizar la UI (tabla y texto de figura activa)
+        this.view.update(this.model.figures, this.model.selectedFigureId);
+    }
+
+    handleCreateRequest(type) {
+        const id = prompt('Ingrese el ID de la figura:');
+        if (!id) return; 
+        
+        if (this.model.getFigure(id)) {
+            alert(`Error: El ID "${id}" ya existe. Por favor, elija otro.`);
+            return;
+        }
+
+        const xStr = prompt('Ingrese la coordenada X:');
+        const yStr = prompt('Ingrese la coordenada Y:');
+        const x = parseFloat(xStr);
+        const y = parseFloat(yStr);
+
+        if (isNaN(x) || isNaN(y)) {
+            alert('Error: Las coordenadas X e Y deben ser números.');
+            return;
+        }
+
+        const color = this.view.getColor();
+        let newFigure = null;
+
+        try {
+            switch (type) {
+                case 'rectangle': {
+                    const w = parseFloat(prompt('Ingrese el ancho:'));
+                    const h = parseFloat(prompt('Ingrese el alto:'));
+                    if (isNaN(w) || isNaN(h) || w <= 0 || h <= 0) throw new Error('Dimensiones inválidas para el rectángulo.');
+                    newFigure = new Rectangulo(id, x, y, w, h, color);
+                    break;
+                }
+                case 'circle': {
+                    const r = parseFloat(prompt('Ingrese el radio:'));
+                    if (isNaN(r) || r <= 0) throw new Error('Radio inválido para el círculo.');
+                    newFigure = new Circulo(id, x, y, r, color);
+                    break;
+                }
+                case 'triangle': {
+                    const s = parseFloat(prompt('Ingrese el tamaño del lado:'));
+                    if (isNaN(s) || s <= 0) throw new Error('Lado inválido para el triángulo.');
+                    newFigure = new TrianguloEquilatero(id, x, y, s, color);
+                    break;
+                }
+            }
+            if (newFigure) {
+                this.model.addFigure(newFigure);
+                this.model.setSelectedFigure(id);
+            }
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    }
+
+    handleKeyDown(event) {
+        if (!this.model.getSelectedFigure()) return;
+
+        const moveAmount = 5; // Píxeles a mover por cada pulsación
+        let dx = 0;
+        let dy = 0;
+
+        switch (event.key) {
+            case 'ArrowUp':
+                dy = -moveAmount;
+                break;
+            case 'ArrowDown':
+                dy = moveAmount;
+                break;
+            case 'ArrowLeft':
+                dx = -moveAmount;
+                break;
+            case 'ArrowRight':
+                dx = moveAmount;
+                break;
+            default:
+                return; // No hacer nada si no es una flecha
+        }
+        
+        // Prevenir el comportamiento por defecto del navegador (como hacer scroll)
+        event.preventDefault();
+        
+        this.model.moveSelectedFigure(dx, dy);
+    }
+}
+
+
+
+function main() {
+    const ui = new ApplicationUI();
+    document.body.appendChild(ui);
+    
+    const model = new ApplicationModel();
+    const controller = new ApplicationController(ui, model);
+
+    controller.init();
+}
+
+window.onload = main;
+
+</script>
+</body>
+</html>
