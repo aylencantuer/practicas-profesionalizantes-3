@@ -5,9 +5,9 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- CREACIÓN DE LA BASE DE DATOS Y TABLA
 -- -----------------------------------------------------
-DROP DATABASE IF EXISTS `actividad-1`;
-CREATE DATABASE IF NOT EXISTS `actividad-1` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
-USE `actividad-1`;
+DROP DATABASE IF EXISTS `country_db`; -- CAMBIO: x nombre más descriptivo.
+CREATE DATABASE IF NOT EXISTS `country_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+USE `country_db`;
 
 DROP TABLE IF EXISTS `country`;
 CREATE TABLE IF NOT EXISTS `country` (
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `country` (
   `name` VARCHAR(45) NOT NULL,
   `capital` VARCHAR(45),
   `language` VARCHAR(45),
-  `surface` FLOAT,
+  `surface` DECIMAL(15, 2),
   `population` INT(15),
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE
@@ -47,7 +47,7 @@ CREATE PROCEDURE create_country(
     IN p_name VARCHAR(45),
     IN p_capital VARCHAR(45),
     IN p_language VARCHAR(45),
-    IN p_surface FLOAT,
+    IN p_surface DECIMAL(15, 2),
     IN p_population INT
 )
 BEGIN
@@ -60,8 +60,21 @@ DELIMITER ;
 -- PROCEDIMIENTO: LEER PAÍS
 -- -----------------------------------------------------
 DELIMITER $$
-CREATE PROCEDURE read_country(
-    IN p_name VARCHAR(45)
+-- CAMBIO: Agregado para buscar por ID, x estándar de ABMs.
+CREATE PROCEDURE `country_read_by_id`(
+    IN p_id INT UNSIGNED
+)
+BEGIN
+    SELECT * FROM country WHERE id = p_id;
+END $$
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- PROCEDIMIENTO: LEER PAÍS POR NOMBRE
+-- -----------------------------------------------------
+DELIMITER $$
+CREATE PROCEDURE `country_read_by_name`(
+    IN p_name VARCHAR(100)
 )
 BEGIN
     SELECT * FROM country WHERE name = p_name;
@@ -77,7 +90,7 @@ CREATE PROCEDURE update_country(
     IN p_name VARCHAR(45),
     IN p_capital VARCHAR(45),
     IN p_language VARCHAR(45),
-    IN p_surface FLOAT,
+    IN p_surface DECIMAL(15, 2),
     IN p_population INT
 )
 BEGIN
@@ -95,7 +108,7 @@ DELIMITER ;
 -- PROCEDIMIENTO: ELIMINAR PAÍS
 -- -----------------------------------------------------
 DELIMITER $$
-CREATE PROCEDURE delete_country(
+CREATE PROCEDURE country_delete(
     IN p_id INT
 )
 BEGIN
